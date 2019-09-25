@@ -34,9 +34,15 @@ func main() {
 	for fi, f := range files {
 		sCount := make([]int, AsciiSize)
 		sP := make([]float64, AsciiSize)
-		sE := make([]float64, AsciiSize)
+		sH := make([]float64, AsciiSize)
+		spCount := make([][]int, AsciiSize)
+		spP := make([][]float64, AsciiSize)
+		for i := 0; i < AsciiSize; i++ {
+			spCount[i], spP[i] = make([]int, AsciiSize), make([]float64, AsciiSize)
+		}
 		var fileLength int
-		var entropy float64
+		var entropy, pairEntropy float64
+		var prev rune
 		buf, err := ioutil.ReadFile(f)
 		if err != nil {
 			fmt.Println(err)
@@ -44,17 +50,41 @@ func main() {
 		}
 		inputString := string(buf)
 
-		for _, r := range inputString {
+		for ri, r := range inputString {
 			if r < AsciiSize {
 				switch {
 				case r >= aCode && r <= zCode:
 					sCount[r-CaseOffset]++
+					if ri > 0 {
+						spCount[prev][r-CaseOffset]++
+					} else {
+						spCount[CommaCode][r-CaseOffset]++
+					}
+					prev = r - CaseOffset
 				case r >= ACode && r <= ZCode:
 					sCount[r]++
+					if ri > 0 {
+						spCount[prev][r]++
+					} else {
+						spCount[CommaCode][r]++
+					}
+					prev = r
 				case r == SpaceCode:
 					sCount[SpaceCode]++
+					if ri > 0 {
+						spCount[prev][SpaceCode]++
+					} else {
+						spCount[CommaCode][SpaceCode]++
+					}
+					prev = SpaceCode
 				default:
 					sCount[CommaCode]++
+					if ri > 0 {
+						spCount[prev][CommaCode]++
+					} else {
+						spCount[CommaCode][CommaCode]++
+					}
+					prev = CommaCode
 				}
 				fileLength++
 			} else {
@@ -66,15 +96,29 @@ func main() {
 		for i, _ := range sP {
 			if sCount[i] > 0 {
 				sP[i] = float64(sCount[i]) / float64(fileLength)
-				sE[i] = - sP[i] * math.Log2(sP[i])
-				entropy += sE[i]
+				sH[i] = - sP[i] * math.Log2(sP[i])
+				entropy += sH[i]
+			}
+		}
+
+		if !shortMode {
+			for j, _ := range spP {
+				for i, _ := range spP[j] {
+					if spCount[j][i] > 0 {
+						spP[j][i] = float64(spCount[j][i]) / float64(fileLength)
+						pairEntropy += - spP[j][i] * sP[j] * math.Log2(spP[j][i])
+					}
+				}
 			}
 		}
 
 		fmt.Printf("Файл: %s, Суммарная энтропия: %.4f бит\n", f, entropy)
+		if !shortMode {
+			fmt.Printf("Суммарная энтропия с учетом частот вхождений пар символов:  %.4f бит\n", pairEntropy)
+		}
 		for i, v := range sP {
 			if v > 0.0 {
-				fmt.Printf("\"%s\": H=%.4f P=%.4f\n", string(rune(i)), sE[i], v)
+				fmt.Printf("\"%s\": H=%.4f P=%.4f\n", string(rune(i)), sH[i], v)
 			}
 		}
 
