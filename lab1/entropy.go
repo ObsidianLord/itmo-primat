@@ -15,6 +15,13 @@ const CaseOffset = 32
 const SpaceCode = 32
 const CommaCode = 44
 
+func sliceSum(a []int) (sum int) {
+	for _, v := range a {
+		sum += v
+	}
+	return
+}
+
 func main() {
 	var aCode, zCode int32 = ACode + CaseOffset, ZCode + CaseOffset
 	files := os.Args[1:]
@@ -105,7 +112,7 @@ func main() {
 			for j, _ := range spP {
 				for i, _ := range spP[j] {
 					if spCount[j][i] > 0 {
-						spP[j][i] = float64(spCount[j][i]) / float64(fileLength)
+						spP[j][i] = float64(spCount[j][i]) / float64(sliceSum(spCount[j]))
 						pairEntropy += - spP[j][i] * sP[j] * math.Log2(spP[j][i])
 					}
 				}
