@@ -9,8 +9,6 @@ import (
 )
 
 const AsciiSize = 128
-const aCode = 97
-const zCode = 122
 const ACode = 65
 const ZCode = 90
 const CaseOffset = 32
@@ -18,6 +16,7 @@ const SpaceCode = 32
 const CommaCode = 44
 
 func main() {
+	var aCode, zCode int32 = ACode + CaseOffset, ZCode + CaseOffset
 	files := os.Args[1:]
 	modePtr := flag.Bool("s", false, "short")
 	flag.Parse()
