@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"math"
@@ -23,16 +22,7 @@ func sliceSum(a []int) (sum int) {
 }
 
 func main() {
-	var aCode, zCode int32 = ACode + CaseOffset, ZCode + CaseOffset
 	files := os.Args[1:]
-	modePtr := flag.Bool("s", false, "short")
-	flag.Parse()
-	shortMode := *modePtr
-
-	if shortMode {
-		files = files[1:]
-	}
-
 	if len(files) == 0 {
 		fmt.Println("Ошибка! Необходимо указать файлы, подлежащие обработке")
 		os.Exit(1)
