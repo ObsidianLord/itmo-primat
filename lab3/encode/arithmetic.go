@@ -27,7 +27,7 @@ func main() {
 		freq, _ := getFreqAndLength(inputString)
 		var freqString string
 
-		for i,v := range freq {
+		for i, v := range freq {
 			freqString += fmt.Sprintf("%d", v)
 			if i < len(freq)-1 {
 				freqString += "\n"

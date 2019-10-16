@@ -97,8 +97,8 @@ func encode(s string) (lBorderString string, rBorderString string) {
 		if offset > 1 {
 			lPart = lBorder.Text('f', 250)[2 : offset+1]
 			rPart = rBorder.Text('f', 250)[2 : offset+1]
-			prevLBorder, _, _ = big.ParseFloat("0." + lBorder.Text('f', 250)[offset+1:], 10, 250, big.ToZero)
-			prevRBorder, _, _ = big.ParseFloat("0." + rBorder.Text('f', 250)[offset+1:], 10, 250, big.ToZero)
+			prevLBorder, _, _ = big.ParseFloat("0."+lBorder.Text('f', 250)[offset+1:], 10, 250, big.ToZero)
+			prevRBorder, _, _ = big.ParseFloat("0."+rBorder.Text('f', 250)[offset+1:], 10, 250, big.ToZero)
 		} else {
 			prevLBorder.Copy(lBorder)
 			prevRBorder.Copy(rBorder)
@@ -116,8 +116,8 @@ func encode(s string) (lBorderString string, rBorderString string) {
 		//if i>10 {break}
 	}
 
-	prevLBorderString := strings.Split(prevLBorder.Text('f',15),".")[0]
-	prevRBorderString := strings.Split(prevRBorder.Text('f',15),".")[0]
+	prevLBorderString := strings.Split(prevLBorder.Text('f', 15), ".")[0]
+	prevRBorderString := strings.Split(prevRBorder.Text('f', 15), ".")[0]
 	lBorderString += prevLBorderString
 	rBorderString += prevRBorderString
 
